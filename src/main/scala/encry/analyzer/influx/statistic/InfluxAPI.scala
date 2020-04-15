@@ -1,6 +1,7 @@
 package encry.analyzer.influx.statistic
 
 import cats.effect.Async
+import cats.syntax.applicativeError._
 import cats.syntax.flatMap._
 import com.paulgoldbaum.influxdbclient.Parameter.{ Consistency, Precision }
 import com.paulgoldbaum.influxdbclient._
@@ -56,11 +57,9 @@ object InfluxAPI {
                   case Success(_)         => Right(())
                 })
               }(influxContext)
+          }.handleErrorWith { err =>
+            Logger[F].info(s"Error ${err.getMessage} has occurred while processing insertion into db.")
           } >> Logger[F].info(s"New point $point was inserted!")
-        }.handleErrorWith { err =>
-          Stream
-            .eval(Logger[F].info(s"Error ${err.getMessage} has occurred while processing insertion into db."))
-            .flatMap(_ => processInputEvents)
         }
     }
 }
