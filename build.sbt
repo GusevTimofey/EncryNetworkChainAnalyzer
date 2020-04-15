@@ -26,7 +26,8 @@ libraryDependencies ++= Seq(
   "io.chrisdavenport"     %% "log4cats-slf4j"         % "0.4.0-M2",
   "com.github.pureconfig" %% "pureconfig"             % "0.12.2",
   "com.github.pureconfig" %% "pureconfig-cats-effect" % "0.12.2",
-  "com.paulgoldbaum"      %% "scala-influxdb-client"  % "0.6.1"
+  "com.paulgoldbaum"      %% "scala-influxdb-client"  % "0.6.1",
+  "com.google.guava"      % "guava"                   % "28.2-jre"
 ) ++ kafka ++ cats
 
 scalacOptions ++= Seq(
