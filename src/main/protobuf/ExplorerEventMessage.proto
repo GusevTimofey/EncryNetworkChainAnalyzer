@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+message ExplorerEventProtoMessage {
+
+    message UnavailableNodeEventMessage {
+        string url = 1;
+    }
+
+    message NewBlockReceivedEventMessage {
+        string id = 1;
+    }
+
+    message RollbackOccurredEventMessage {
+        string branchPoint = 1;
+        uint32 height = 2;
+    }
+
+    message NewNodeEventMessage {
+        string url = 1;
+    }
+
+    message ForkOccurredEventMessage {
+        string id = 1;
+        uint32 height = 2;
+    }
+
+    message ExplorerObserverLogEventMessage {
+        string log = 1;
+    }
+
+    message ExplorerCoreLogEventMessage {
+        string log = 1;
+    }
+
+    oneof eventMessage {
+        UnavailableNodeEventMessage unavailableNodeEventMessage = 1;
+        NewBlockReceivedEventMessage newBlockReceivedEventMessage = 2;
+        RollbackOccurredEventMessage rollbackOccurredEventMessage = 3;
+        NewNodeEventMessage newNodeEventMessage = 4;
+        ForkOccurredEventMessage forkOccurredEventMessage = 5;
+        ExplorerObserverLogEventMessage explorerObserverLogEventMessage = 6;
+        ExplorerCoreLogEventMessage explorerCoreLogEventMessage = 7;
+    }
+
+}
