@@ -42,7 +42,7 @@ object KafkaConsumer {
             Logger[F].info(s"New record received").flatMap { _ =>
               r.record.value match {
                 case Some(value: NewBlockReceived) =>
-                  signalsForGeneratorEvent.enqueue1(value) >> signalsForStatisticRecord.enqueue1(value) >>
+                  signalsForStatisticRecord.enqueue1(value) >>
                     Logger[F].info(s"New event $value was sent to statistic and generator")
                 case Some(value: ExplorerObserverLogEvent) =>
                   signalsForNetworkLogProcessor.enqueue1(value) >>
