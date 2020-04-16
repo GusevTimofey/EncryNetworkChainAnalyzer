@@ -7,6 +7,7 @@ scalaVersion := "2.12.11"
 val fs2Version         = "2.1.0"
 val catsVersion        = "2.0.0"
 val catsEffectsVersion = "2.0.0"
+val simulacrumVersion  = "0.19.0"
 
 val kafka = Seq(
   "com.github.fd4s" %% "fs2-kafka" % "1.0.0"
@@ -23,6 +24,7 @@ libraryDependencies ++= Seq(
   "io.monix"              %% "monix"                  % "3.1.0",
   "ch.qos.logback"        % "logback-classic"         % "1.2.3",
   "org.slf4j"             % "slf4j-api"               % "1.7.25",
+  "com.github.mpilquist"  %% "simulacrum"             % simulacrumVersion,
   "io.chrisdavenport"     %% "log4cats-slf4j"         % "0.4.0-M2",
   "com.github.pureconfig" %% "pureconfig"             % "0.12.2",
   "com.github.pureconfig" %% "pureconfig-cats-effect" % "0.12.2",

@@ -9,13 +9,15 @@ import com.paulgoldbaum.influxdbclient.{ Database, InfluxDB }
 import encry.analyzer.event.event.ExplorerEvent
 import encry.analyzer.event.processor.consumer.KafkaConsumer
 import encry.analyzer.influx.statistic.InfluxAPI
+import encry.analyzer.influx.statistic.algebra.LiftFuture
 import encry.analyzer.settings.{ settingsReader, AnalyzerSettings }
 import fs2.concurrent.Queue
 import io.chrisdavenport.log4cats.SelfAwareStructuredLogger
 import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
 import monix.eval.{ Task, TaskApp }
+import monix.execution.Callback
 
-import scala.concurrent.{ ExecutionContext, ExecutionContextExecutor }
+import scala.concurrent.{ ExecutionContext, ExecutionContextExecutor, Future }
 
 object AppMain extends TaskApp {
   override def run(args: List[String]): Task[ExitCode] =
@@ -35,8 +37,12 @@ object AppMain extends TaskApp {
             signalsForCoreLogProcessor,
             as
           )
-          _  <- logger.info(s"ks service created")
-          is = InfluxAPI(as, signalsForStatisticRecord, influx, ec)
+          _ <- logger.info(s"ks service created")
+          implicit0(liftFuture: LiftFuture[Task]) = new LiftFuture[Task] {
+            override def liftFuture[T](v: Future[T]): Task[T] =
+              Task.async { cb: Callback[Throwable, T] => v.onComplete(r => cb(r))(ec) }
+          }
+          is = InfluxAPI(as, signalsForStatisticRecord, influx)
           _  <- (ks.runConsumer concurrently is.run).compile.drain
         } yield ()).as(ExitCode.Success)
     }
